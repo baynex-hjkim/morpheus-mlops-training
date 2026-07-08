@@ -1,6 +1,6 @@
 name: mlops-demo-ci
 run-name: mlops-demo-ci ${{ github.sha }}
-# trigger: 2026-07-08-ray-dns-final-check
+# trigger: 2026-07-08-ray-dashboard-retain-final-check
 
 on:
   workflow_dispatch:
