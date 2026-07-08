@@ -85,7 +85,7 @@ jobs:
                   lines.append(f'  tag: "{short_sha}"')
               else:
                   lines.append(line)
-          path.write_text("\\n".join(lines) + "\\n")
+          path.write_text("\n".join(lines) + "\n")
           PY
           cd ../..
           git config user.name "mlops-demo-ci"
