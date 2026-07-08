@@ -1,4 +1,5 @@
 name: mlops-demo-ci
+run-name: mlops-demo-ci ${{ github.sha }}
 
 on:
   workflow_dispatch:
