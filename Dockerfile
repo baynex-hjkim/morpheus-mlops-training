@@ -1,9 +1,8 @@
-FROM python:3.12-slim
+FROM rayproject/ray:2.40.0-py312
 
 WORKDIR /app
-COPY app/main.py /app/main.py
+COPY src ./src
 
-ENV PORT=8080
-EXPOSE 8080
+ENV PYTHONPATH=/app
 
-CMD ["python", "/app/main.py"]
+CMD ["python", "-m", "src.train"]

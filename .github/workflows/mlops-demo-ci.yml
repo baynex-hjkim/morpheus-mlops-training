@@ -5,13 +5,19 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "src/**"
+      - "Dockerfile"
+      - "requirements.txt"
+      - ".github/workflows/mlops-demo-ci.yml"
 
 env:
-  IMAGE_NAME: mlops-demo
+  IMAGE_NAME: ray-mlops-demo
   HARBOR_PROJECT: mlops
   CHARTS_REPO: baynex-hjkim/morpheus-mlops-charts
   CHARTS_PATH: gitops/mlops-demo
   ARGOCD_APP: mlops-demo
+  GITHUB_HOST: github.com
 
 jobs:
   build-push-sync:
@@ -63,9 +69,24 @@ jobs:
         run: |
           set -euo pipefail
           short_sha="${{ steps.vars.outputs.short_sha }}"
-          git clone "https://x-access-token:${CHARTS_REPO_TOKEN}@github.com/${CHARTS_REPO}.git" charts-repo
+          git clone "https://x-access-token:${CHARTS_REPO_TOKEN}@${GITHUB_HOST}/${CHARTS_REPO}.git" charts-repo
           cd "charts-repo/${CHARTS_PATH}"
-          sed -i "s/^  tag: .*/  tag: \"${short_sha}\"/" values.yaml
+          SHORT_SHA="$short_sha" python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          short_sha = os.environ["SHORT_SHA"]
+          path = Path("values.yaml")
+          lines = []
+          for line in path.read_text().splitlines():
+              if line.startswith("runId: "):
+                  lines.append(f"runId: {short_sha}")
+              elif line.startswith("  tag: "):
+                  lines.append(f'  tag: "{short_sha}"')
+              else:
+                  lines.append(line)
+          path.write_text("\\n".join(lines) + "\\n")
+          PY
           cd ../..
           git config user.name "mlops-demo-ci"
           git config user.email "mlops-demo-ci@example.com"
@@ -98,8 +119,8 @@ jobs:
             --password "$ARGOCD_PASSWORD" \
             --insecure \
             --grpc-web
-          /tmp/argocd app sync "$ARGOCD_APP" --grpc-web
-          /tmp/argocd app wait "$ARGOCD_APP" --health --sync --timeout 600 --grpc-web
+          /tmp/argocd app sync "$ARGOCD_APP" --prune --grpc-web
+          /tmp/argocd app wait "$ARGOCD_APP" --sync --operation --timeout 600 --grpc-web
         env:
           ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
           ARGOCD_USERNAME: ${{ secrets.ARGOCD_USERNAME }}
