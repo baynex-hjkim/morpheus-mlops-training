@@ -82,7 +82,7 @@ jobs:
           lines = []
           for line in path.read_text().splitlines():
               if line.startswith("runId: "):
-                  lines.append(f"runId: {short_sha}")
+                  lines.append(f'runId: "{short_sha}"')
               elif line.startswith("  tag: "):
                   lines.append(f'  tag: "{short_sha}"')
               else:
