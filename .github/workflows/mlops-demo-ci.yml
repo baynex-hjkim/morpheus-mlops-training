@@ -1,6 +1,6 @@
 name: mlops-demo-ci
 run-name: mlops-demo-ci ${{ github.sha }}
-# trigger: 2026-07-08-token-refresh
+# trigger: 2026-07-08-contents-token-refresh
 
 on:
   workflow_dispatch:
