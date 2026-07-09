@@ -83,7 +83,7 @@ class Handler(BaseHTTPRequestHandler):
             200,
             {
                 "app": "mlops-demo",
-                "message": "KServe custom predictor for the Morpheus MLOps demo",
+                "message": "KServe custom inference service for the Morpheus MLOps demo",
                 "predict_path": "/v1/models/mlops-demo:predict",
             },
         )

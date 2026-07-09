@@ -9,7 +9,7 @@ on:
       - main
     paths:
       - "src/**"
-      - "app/**"
+      - "inference/**"
       - "Dockerfile"
       - "requirements.txt"
       - ".github/workflows/mlops-demo-ci.yml"
