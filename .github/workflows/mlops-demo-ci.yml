@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - "src/**"
+      - "app/**"
       - "Dockerfile"
       - "requirements.txt"
       - ".github/workflows/mlops-demo-ci.yml"
